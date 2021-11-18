@@ -65,13 +65,15 @@ function addItem(e) {
 
 // Удаление элемента - ф-я
 function removeItem(e) {
+  let newItemInput = document.getElementById("newItemText"); 
   if (
       e.target.hasAttribute("data-action") &&
       e.target.getAttribute("data-action") == "delete"
   ) {
       if (confirm("Удалить задачу?")) {
           e.target.parentNode.remove();
-          filter.value = "";          
+          newItemInput.value = "";
+          filter.value = "";        
 
           // Определение индекса удаленного элемента
           const deleteItemIndex = itemsArray.findIndex((item) => {
