@@ -17,8 +17,7 @@ function elementMaker(text) {
   let newElement = document.createElement("li");
   newElement.className = "list-group-item";
   // Добавим текст в новый элемент
-  let newTextNode = document.createTextNode(text);
-  console.log(newTextNode);
+  let newTextNode = document.createTextNode(text);   
   newElement.appendChild(newTextNode);
   // Создаем кнопку "удалить"
   let deleteBtn = document.createElement("button");
@@ -34,7 +33,6 @@ function elementMaker(text) {
   itemsList.prepend(newElement);
 }
 
-
 // Добавление новой задачи - прослушка события
 form.addEventListener("submit", addItem);
 // Удаление элемента - прослушка клика
@@ -46,17 +44,16 @@ filter.addEventListener("keyup", filterItems);
 
 // Функция добавления новой задачи
 function addItem(e) {
-  // Отменяем отправку формы
+
   e.preventDefault();
   // Находим инпут с текстом для новой задачи
-  let newItemInput = document.getElementById("newItemText");
-  
+  let newItemInput = document.getElementById("newItemText");  
   // Получаем текст из инпута
   let newItemText = newItemInput.value;
 
   if (newItemInput.value != "") {
-    // Очистим поле добавления новой задачи
     newItemInput.value = "";
+    filter.value = "";
     // в слушателе отправим каждое новое значение input в массив, затем добавим в localStorage новое значение из обновленного массива
     itemsArray.push(newItemText);
     localStorage.setItem("items", JSON.stringify(itemsArray));
@@ -74,21 +71,20 @@ function removeItem(e) {
   ) {
       if (confirm("Удалить задачу?")) {
           e.target.parentNode.remove();
+          filter.value = "";          
 
-          // Обновление локального хранилища. Определение индекса удаленного элемента
+          // Определение индекса удаленного элемента
           const deleteItemIndex = itemsArray.findIndex((item) => {
               return item === e.target.parentNode.firstChild.textContent;
           })
-          // console.log( deleteItemIndex);
-          itemsArray.splice(deleteItemIndex, 1);
 
-          // Обновление массива local Storage
-          localItemsArray = JSON.stringify(itemsArray);
-          localStorage.setItem("items", localItemsArray);
+          // вырезаем удаленный элемент из массива
+          itemsArray.splice(deleteItemIndex, 1); 
+          // обновляем localStorage                  
+          localStorage.setItem("items", JSON.stringify(itemsArray));          
       }
-  }
+  }  
 }
-
 
 // Фильтрация списка дел ф-я
 function filterItems(e) {
@@ -101,12 +97,10 @@ function filterItems(e) {
       // Получаем текст задачи из списка и переводим его в нижний регистр
       let itemText = item.firstChild.textContent.toLowerCase();
       // Проверяем вхождение искомой подстроки в текст задачи
-      if (itemText.indexOf(searchedText) != -1) {
-          // Если вхождение есть - показываем элемент с задачей
+      if (itemText.indexOf(searchedText) != -1) { 
           item.style.display = "block";
       } else {
-          // Если вхождения нет - скрываем элемент с задачей
           item.style.display = "none";
-      }
+      }    
   });
 }
